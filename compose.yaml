@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  api:
+    image: python:3.12-slim
+    container_name: skola-online-api
+    working_dir: /app
+
+    volumes:
+      - /volume1/docker/skola-online-api/app:/app
+      - /volume1/docker/skola-online-api/data:/data
+
+    environment:
+      DB_URL: sqlite:////data/timetable.db
+      TZ: Europe/Prague
+
+    command: >
+      sh -c "
+      pip install --no-cache-dir -r /app/requirements.txt &&
+      python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+      "
+
+    ports:
+      - "8088:8000"
+
+    restart: unless-stopped
+ 
